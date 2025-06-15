@@ -92,11 +92,11 @@ export default function CreateUpdate({ getData, setEditModal, user }) {
                             <Label htmlFor="role">ROLE</Label>
                             <Select
                                 name="role"
-                                value={String(formData.role)}
+                                value={formData.role}
                                 onValueChange={(value) =>
                                     setFormData({
                                         ...formData,
-                                        role: String(value),
+                                        role: value,
                                     })
                                 }
                             >
@@ -104,8 +104,8 @@ export default function CreateUpdate({ getData, setEditModal, user }) {
                                     <SelectValue placeholder="Role" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="0">Admin</SelectItem>
-                                    <SelectItem value="1">User</SelectItem>
+                                    <SelectItem value="admin">Admin</SelectItem>
+                                    <SelectItem value="user">User</SelectItem>
                                 </SelectContent>
                             </Select>
                             <InputError message={errors.email} className="mt-2" />
@@ -114,11 +114,11 @@ export default function CreateUpdate({ getData, setEditModal, user }) {
                             <Label htmlFor="status">STATUS</Label>
                             <Select
                                 name="status"
-                                value={String(formData.status)}
+                                value={formData.status}
                                 onValueChange={(value) =>
                                     setFormData({
                                         ...formData,
-                                        status: String(value),
+                                        status: value,
                                     })
                                 }
                             >
@@ -126,8 +126,8 @@ export default function CreateUpdate({ getData, setEditModal, user }) {
                                     <SelectValue placeholder="Status" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="0">Inactive</SelectItem>
-                                    <SelectItem value="1">Active</SelectItem>
+                                    <SelectItem value="inactive">Inactive</SelectItem>
+                                    <SelectItem value="active">Active</SelectItem>
                                 </SelectContent>
                             </Select>
                             <InputError message={errors.email} className="mt-2" />

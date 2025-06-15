@@ -36,17 +36,16 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { Button } from '@/components/ui/button';
-import { Edit, Ellipsis, KeyRound, ShieldAlert, Trash } from 'lucide-react';
+import { Edit, Ellipsis, KeyRound, Trash } from 'lucide-react';
 import CreateUpdate from './CreateUpdate';
 import UpdatePassword from './UpdatePassword';
 export default function Action({ getData, user }) {
     const [deleteAlert, setDeleteAlert] = useState(false);
-    const [inactiveAlert, setInactiveAlert] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const [changePassword, setChangePassword] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
 
-    const shouldRenderDialog = !menuOpen && (deleteAlert || inactiveAlert || editModal || changePassword);
+    const shouldRenderDialog = !menuOpen && (deleteAlert  || editModal || changePassword);
 
     return (
         <>
@@ -64,10 +63,6 @@ export default function Action({ getData, user }) {
                         <Edit />
                         Edit
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setInactiveAlert(true)}>
-                        <ShieldAlert />
-                        Inactive
-                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setChangePassword(true)}>
                         <KeyRound />
                         Change Password
@@ -82,21 +77,6 @@ export default function Action({ getData, user }) {
             {shouldRenderDialog && (
                 <>
                     <AlertDialog open={deleteAlert} onOpenChange={setDeleteAlert}>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    This action cannot be undone. This will permanently delete and remove the data from our servers.
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogAction>Continue</AlertDialogAction>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
-
-                    <AlertDialog open={inactiveAlert} onOpenChange={setInactiveAlert}>
                         <AlertDialogContent>
                             <AlertDialogHeader>
                                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>

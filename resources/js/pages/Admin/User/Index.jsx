@@ -181,9 +181,9 @@ export default function Index() {
                                                 )}
                                             </TableCell>
                                             <TableCell>
-                                                {user.status === 0 ? (
+                                                {user.role === 'admin' ? (
                                                     <Badge variant="secondary">Admin</Badge>
-                                                ) : user.status === 1 ? (
+                                                ) : user.role === 'user' ? (
                                                     <Badge variant="secondary">User</Badge>
                                                 ) : (
                                                     <Badge variant="secondary">Undefined</Badge>
@@ -191,7 +191,7 @@ export default function Index() {
                                             </TableCell>
 
                                             <TableCell>
-                                                {user.status === 1 ? (
+                                                {user.status === 'active' ? (
                                                     <Badge variant="default">Active</Badge>
                                                 ) : (
                                                     <Badge variant="destructive">Inactive</Badge>

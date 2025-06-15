@@ -71,8 +71,8 @@ class AdminUserController extends Controller
                     'max:255',
                     Rule::unique('users')->ignore($id),
                 ],
-            'role' => 'required|in:0,1',
-            'status' => 'required|in:0,1',
+            'role' => 'required|in:user,admin',
+            'status' => 'required|in:active,inactive',
             // 'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
         ]);
 

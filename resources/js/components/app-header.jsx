@@ -10,37 +10,56 @@ import { UserMenuContent } from '@/components/user-menu-content';
 import { useInitials } from '@/hooks/use-initials';
 import { cn } from '@/lib/utils';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Menu, Search, User } from 'lucide-react';
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
 
-const mainNavItems = [
-    {
-        title: 'Dashboard',
-        url: '/dashboard',
-        icon: LayoutGrid,
-    },
-];
-
-const rightNavItems = [
-    {
-        title: 'Repository',
-        url: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        url: 'https://laravel.com/docs/starter-kits',
-        icon: BookOpen,
-    },
-];
-
-const activeItemStyles = 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
 
 export function AppHeader({ breadcrumbs = [] }) {
     const page = usePage();
     const { auth } = page.props;
     const getInitials = useInitials();
+
+    const navLinks = {
+        0: [
+            {
+                title: 'Dashboard',
+                url: '/admin/dashboard',
+                icon: LayoutGrid,
+            },
+            {
+                title: 'User',
+                url: '/admin/user/index',
+                icon: User,
+            },
+        ],
+        1: [
+            {
+                title: 'Dashboard',
+                url: '/user/dashboard',
+                icon: LayoutGrid,
+            },
+        ],
+    };
+
+    // Dynamically set the main navigation items
+    const mainNavItems = navLinks[auth.user.role] || [];
+    
+    const rightNavItems = [
+        {
+            title: 'Repository',
+            url: 'https://github.com/laravel/react-starter-kit',
+            icon: Folder,
+        },
+        {
+            title: 'Documentation',
+            url: 'https://laravel.com/docs/starter-kits',
+            icon: BookOpen,
+        },
+    ];
+
+    const activeItemStyles = 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
+
     return (
         <>
             <div className="border-sidebar-border/80 border-b">

@@ -30,7 +30,7 @@ class AdminUserController extends Controller
                         $query->whereNull('email_verified_at');
                     }
 
-        return $query->orderBy('id', 'desc')->paginate(10);
+        return $query->orderBy('id', $request->order)->paginate(10);
     }
 
     public function store(Request $request)
@@ -46,6 +46,8 @@ class AdminUserController extends Controller
                     Rule::unique('users')
                 ],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'role' => 'required|in:0,1',
+            'status' => 'required|in:0,1',
         ]);
 
 
@@ -59,8 +61,6 @@ class AdminUserController extends Controller
     {
         $user = User::findOrFail($id);
         
-        // return $request;
-
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'email' => [
@@ -71,19 +71,26 @@ class AdminUserController extends Controller
                     'max:255',
                     Rule::unique('users')->ignore($id),
                 ],
-            'role' => 'required|in:user,admin',
-            'status' => 'required|in:active,inactive',
-            // 'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
+            'role' => 'required|in:0,1',
+            'status' => 'required|in:0,1',
         ]);
 
-        // return $data;
+        $user->update($data);
 
-        // if(!empty($data['password'])){
-        //     $data['password'] = Hash::make($data['password']);
-        // }else{
-        //     unset($data['password']);
-        // }
+        return response()->json([
+            'status' => 'updated'
+        ], 200);
+    }
 
+    public function password(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        
+        $data = $request->validate([
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $data['password'] = Hash::make($data['password']);
 
         $user->update($data);
 

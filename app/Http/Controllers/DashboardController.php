@@ -12,9 +12,9 @@ class DashboardController extends Controller
         if(Auth::check()){
             $role = Auth::user()->role;
 
-            if($role === 'admin'){
+            if($role === 0){
                 return redirect('/admin/dashboard');
-            } else if($role === 'user'){
+            } else if($role === 1){
                 return redirect('/user/dashboard');
             } else{
                 return redirect('/');

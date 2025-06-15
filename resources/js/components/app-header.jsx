@@ -21,7 +21,7 @@ export function AppHeader({ breadcrumbs = [] }) {
     const getInitials = useInitials();
 
     const navLinks = {
-        admin: [
+        0: [
             {
                 title: 'Dashboard',
                 url: '/admin/dashboard',
@@ -33,7 +33,7 @@ export function AppHeader({ breadcrumbs = [] }) {
                 icon: User,
             },
         ],
-        user: [
+        1: [
             {
                 title: 'Dashboard',
                 url: '/user/dashboard',

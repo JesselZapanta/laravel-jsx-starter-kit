@@ -1,49 +1,82 @@
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
-import { DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import axios from 'axios';
 import { Loader2Icon } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 import { toast } from 'sonner';
 
-export default function CreateUpdate({ getData, setEditModal, user }) {
-    const [formData, setFormData] = useState({
-        name: user.name || '',
-        email: user.email || '',
-        role: user.role || '',
-        status: user.status || '',
-    });
-
-    const [processing, serProcessing] = useState(false);
+export default function CreateUpdate({ getData, setEditCreateModal, editCreateModal, user }) {
+    const [processing, setProcessing] = useState(false);
     const [errors, setErrors] = useState({});
 
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        role: '',
+        status: '',
+        password: '',
+        password_confirmation: '',
+    });
+
+    useEffect(() => {
+        if (user) {
+            setFormData({
+                name: user.name || '',
+                email: user.email || '',
+                role: String(user.role) || '',
+                status: String(user.status) || '',
+                password: '',
+                password_confirmation: '',
+            });
+        }
+    }, [user]);
+
+    useEffect(() => {
+        if (!editCreateModal) {
+            resetForm();
+        }
+    }, [editCreateModal]);
+
+    const resetForm = () => {
+        setFormData({
+            name: '',
+            email: '',
+            role: '',
+            status: '',
+            password: '',
+            password_confirmation: '',
+        });
+        setErrors({});
+    };
+
+    const handleCloseModal = () => {
+        setEditCreateModal(false);
+        resetForm();
+        getData();
+    };
+    
+
     const handleSubmit = async () => {
-        serProcessing(true);
+        setProcessing(true);
         if (user) {
             //update
-            console.log(formData);
             try {
                 const res = await axios.put(`/admin/user/update/${user.id}`, formData);
 
                 if (res.data.status === 'updated') {
-                    //do something
-                    // alert('updated');
-                    // router.visit('/admin/user/index');
-                    setEditModal(false);
-                    getData();
+                    handleCloseModal();
                     toast.success('Edited', {
                         description: 'User details updated successfully.',
                     });
                 }
-
-                console.log(res);
             } catch (err) {
-                if (err.status === 422) {
+                if (err.response?.status === 422) {
                     setErrors(err.response.data.errors);
                     toast.warning('Validation Error', {
                         description: 'Oops! Some fields need your attention.',
@@ -51,30 +84,48 @@ export default function CreateUpdate({ getData, setEditModal, user }) {
                 }
                 console.log(err);
             } finally {
-                serProcessing(false);
+                setProcessing(false);
             }
         } else {
             //create
+            try {
+                const res = await axios.post('/admin/user/store/', formData);
+
+                if (res.data.status === 'created') {
+                    handleCloseModal();
+                    toast.success('Edited', {
+                        description: 'User details stored successfully',
+                    });
+                }
+            } catch (err) {
+                if (err.response?.status === 422) {
+                    setErrors(err.response.data.errors);
+                    toast.warning('Validation Error', {
+                        description: 'Oops! Some fields need your attention.',
+                    });
+                }
+                console.log(err);
+            } finally {
+                setProcessing(false);
+            }
         }
     };
 
-    console.log(user);
-
     return (
-        <form>
-            <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                    <DialogTitle>USER INFORMATION</DialogTitle>
-                    {/* <DialogDescription>Make changes to your profile here. Click save when you&apos;re done.</DialogDescription> */}
-                </DialogHeader>
+        <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+                <DialogTitle>USER INFORMATION</DialogTitle>
+                <DialogDescription></DialogDescription>
+            </DialogHeader>
+            <form>
                 <div className="grid gap-6">
                     <div className="grid gap-2">
                         <Label htmlFor="name">NAME</Label>
                         <Input
                             name="name"
                             type="text"
+                            autoComplete="username"
                             required
-                            autoComplete="name"
                             value={formData.name}
                             onChange={(e) =>
                                 setFormData({
@@ -92,11 +143,11 @@ export default function CreateUpdate({ getData, setEditModal, user }) {
                             <Label htmlFor="role">ROLE</Label>
                             <Select
                                 name="role"
-                                value={formData.role}
+                                value={String(formData.role)}
                                 onValueChange={(value) =>
                                     setFormData({
                                         ...formData,
-                                        role: value,
+                                        role: String(value),
                                     })
                                 }
                             >
@@ -104,21 +155,21 @@ export default function CreateUpdate({ getData, setEditModal, user }) {
                                     <SelectValue placeholder="Role" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="admin">Admin</SelectItem>
-                                    <SelectItem value="user">User</SelectItem>
+                                    <SelectItem value="0">Admin</SelectItem>
+                                    <SelectItem value="1">User</SelectItem>
                                 </SelectContent>
                             </Select>
-                            <InputError message={errors.email} className="mt-2" />
+                            <InputError message={errors.role} className="mt-2" />
                         </div>
                         <div className="grid w-full gap-2">
                             <Label htmlFor="status">STATUS</Label>
                             <Select
                                 name="status"
-                                value={formData.status}
+                                value={String(formData.status)}
                                 onValueChange={(value) =>
                                     setFormData({
                                         ...formData,
-                                        status: value,
+                                        status: String(value),
                                     })
                                 }
                             >
@@ -126,11 +177,11 @@ export default function CreateUpdate({ getData, setEditModal, user }) {
                                     <SelectValue placeholder="Status" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="inactive">Inactive</SelectItem>
-                                    <SelectItem value="active">Active</SelectItem>
+                                    <SelectItem value="0">Inactive</SelectItem>
+                                    <SelectItem value="1">Active</SelectItem>
                                 </SelectContent>
                             </Select>
-                            <InputError message={errors.email} className="mt-2" />
+                            <InputError message={errors.status} className="mt-2" />
                         </div>
                     </div>
                     <div className="grid gap-2">
@@ -138,8 +189,8 @@ export default function CreateUpdate({ getData, setEditModal, user }) {
                         <Input
                             name="email"
                             type="email"
-                            required
                             autoComplete="email"
+                            required
                             value={formData.email}
                             onChange={(e) =>
                                 setFormData({
@@ -152,23 +203,63 @@ export default function CreateUpdate({ getData, setEditModal, user }) {
                         />
                         <InputError message={errors.email} className="mt-2" />
                     </div>
+                    {!user && (
+                        <>
+                            <div className="grid gap-2">
+                                <Label htmlFor="password">PASSWORD</Label>
+                                <Input
+                                    name="password"
+                                    type="password"
+                                    required
+                                    autoComplete="new-password"
+                                    value={formData.password}
+                                    onChange={(e) =>
+                                        setFormData({
+                                            ...formData,
+                                            password: e.target.value,
+                                        })
+                                    }
+                                    disabled={processing}
+                                />
+                                <InputError message={errors.password} className="mt-2" />
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="password_confirmation">RE-TYPE PASSWORD</Label>
+                                <Input
+                                    name="password_confirmation"
+                                    type="password"
+                                    autoComplete="new-password"
+                                    required
+                                    value={formData.password_confirmation}
+                                    onChange={(e) =>
+                                        setFormData({
+                                            ...formData,
+                                            password_confirmation: e.target.value,
+                                        })
+                                    }
+                                    disabled={processing}
+                                />
+                                <InputError message={errors.password_confirmation} className="mt-2" />
+                            </div>
+                        </>
+                    )}
                 </div>
-                <DialogFooter>
-                    <DialogClose asChild>
-                        <Button variant="outline">Cancel</Button>
-                    </DialogClose>
-                    <Button disabled={processing} onClick={handleSubmit}>
-                        {processing ? (
-                            <>
-                                <Loader2Icon className="animate-spin" />
-                                Please wait
-                            </>
-                        ) : (
-                            <>Save changes</>
-                        )}
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </form>
+            </form>
+            <DialogFooter>
+                <DialogClose asChild>
+                    <Button variant="outline">Cancel</Button>
+                </DialogClose>
+                <Button disabled={processing} onClick={handleSubmit}>
+                    {processing ? (
+                        <>
+                            <Loader2Icon className="animate-spin" />
+                            Please wait
+                        </>
+                    ) : (
+                        <>{user ? 'Save changes' : 'Create'}</>
+                    )}
+                </Button>
+            </DialogFooter>
+        </DialogContent>
     );
 }

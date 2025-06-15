@@ -11,7 +11,7 @@ export function AppSidebar() {
     const { auth } = page.props;
 
     const navLinks = {
-        admin: [
+        0: [
             {
                 title: 'Dashboard',
                 url: '/admin/dashboard',
@@ -23,7 +23,7 @@ export function AppSidebar() {
                 icon: User,
             },
         ],
-        user: [
+        1: [
             {
                 title: 'Dashboard',
                 url: '/user/dashboard',

@@ -10,9 +10,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Action from './Partials/Action';
-import { FilterX, Loader2Icon, Plus, RefreshCcw  } from 'lucide-react';
+import { ArrowDown, ArrowDownUp, ArrowUp, FilterX, Loader2Icon, Plus, RefreshCcw  } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import MyPagination from '@/components/MyPagination';
+
+import { Dialog } from '@/components/ui/dialog';
+import CreateUpdate from './Partials/CreateUpdate';
 
 const breadcrumbs = [
     {
@@ -33,7 +36,7 @@ export default function Index() {
     const [role, setRole] = useState("");
     const [verified, setVerified] = useState("");
     const [page, setPage] = useState(1);
-
+    const [order, setOrder] = useState('desc');
 
     const reset = () => {
         setSearch('');
@@ -52,6 +55,7 @@ export default function Index() {
             `status=${status}`, 
             `role=${role}`, 
             `verified=${verified}`,
+            `order=${order}`,
         ].join('&');
 
         try{
@@ -85,17 +89,20 @@ export default function Index() {
 
     useEffect(() => {
         getData();
-    }, [page, status, role, verified]);
+    }, [page, status, role, verified, order]);
 
+    //create
 
+    const [editCreateModal, setEditCreateModal] = useState(false);
+    
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
             <div className="m-4 space-y-2 rounded-xl">
-                <p className="font-bold text-lg">List of Users</p>
+                <p className="text-lg font-bold">List of Users</p>
                 <div className="flex justify-between gap-2">
                     <div className="flex gap-2">
-                        <Button>
+                        <Button onClick={setEditCreateModal}>
                             <Plus />
                             New
                         </Button>
@@ -110,6 +117,9 @@ export default function Index() {
                     <div className="flex gap-2">
                         <Button variant="ghost" onClick={getData}>
                             <RefreshCcw />
+                        </Button>
+                        <Button variant="ghost" onClick={() => setOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'))}>
+                            {order === 'asc' ? <ArrowUp /> : <ArrowDown />}
                         </Button>
                         <Button variant="ghost" onClick={reset}>
                             <FilterX />
@@ -181,9 +191,9 @@ export default function Index() {
                                                 )}
                                             </TableCell>
                                             <TableCell>
-                                                {user.role === 'admin' ? (
+                                                {user.role === 0 ? (
                                                     <Badge variant="secondary">Admin</Badge>
-                                                ) : user.role === 'user' ? (
+                                                ) : user.role === 1 ? (
                                                     <Badge variant="secondary">User</Badge>
                                                 ) : (
                                                     <Badge variant="secondary">Undefined</Badge>
@@ -191,7 +201,7 @@ export default function Index() {
                                             </TableCell>
 
                                             <TableCell>
-                                                {user.status === 'active' ? (
+                                                {user.status === 1 ? (
                                                     <Badge variant="default">Active</Badge>
                                                 ) : (
                                                     <Badge variant="destructive">Inactive</Badge>
@@ -223,6 +233,14 @@ export default function Index() {
                         }}
                     />
                 </div>
+                <Dialog open={editCreateModal} onOpenChange={setEditCreateModal}>
+                    <CreateUpdate 
+                    getData={getData} 
+                    setEditCreateModal={setEditCreateModal} 
+                    editCreateModal={editCreateModal} 
+                    user={null} 
+                />
+                </Dialog>
             </div>
         </AppLayout>
     );

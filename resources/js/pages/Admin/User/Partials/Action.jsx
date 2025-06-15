@@ -11,18 +11,7 @@ import {
 
 import {
     Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
 } from '@/components/ui/dialog';
-
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-
 
 import React, { useState } from 'react';
 
@@ -41,11 +30,11 @@ import CreateUpdate from './CreateUpdate';
 import UpdatePassword from './UpdatePassword';
 export default function Action({ getData, user }) {
     const [deleteAlert, setDeleteAlert] = useState(false);
-    const [editModal, setEditModal] = useState(false);
+    const [editCreateModal, setEditCreateModal] = useState(false);
     const [changePassword, setChangePassword] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
 
-    const shouldRenderDialog = !menuOpen && (deleteAlert  || editModal || changePassword);
+    const shouldRenderDialog = !menuOpen && (deleteAlert  || editCreateModal || changePassword);
 
     return (
         <>
@@ -59,7 +48,7 @@ export default function Action({ getData, user }) {
                 <DropdownMenuContent side="left" align="start">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => setEditModal(true)}>
+                    <DropdownMenuItem onClick={() => setEditCreateModal(true)}>
                         <Edit />
                         Edit
                     </DropdownMenuItem>
@@ -90,15 +79,21 @@ export default function Action({ getData, user }) {
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
-
                     {/* form */}
-
-                    <Dialog open={editModal} onOpenChange={setEditModal}>
-                        <CreateUpdate getData={getData} setEditModal={setEditModal} user={user} />
+                    <Dialog open={editCreateModal} onOpenChange={setEditCreateModal}>
+                        <CreateUpdate 
+                            getData={getData} 
+                            setEditCreateModal={setEditCreateModal} 
+                            editCreateModal={editCreateModal} 
+                            user={user} 
+                        />
                     </Dialog>
-
                     <Dialog open={changePassword} onOpenChange={setChangePassword}>
-                        <UpdatePassword user={user} />
+                        <UpdatePassword 
+                            getData={getData} 
+                            setChangePassword={setChangePassword} 
+                            user={user} 
+                        />
                     </Dialog>
                 </>
             )}

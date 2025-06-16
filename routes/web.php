@@ -24,7 +24,7 @@ Route::middleware(['admin'])->group(function () {
     Route::post('/admin/user/store', [AdminUserController::class, 'store']);
     Route::put('/admin/user/update/{id}', [AdminUserController::class, 'update']);
     Route::put('/admin/user/password/{id}', [AdminUserController::class, 'password']);
-    Route::get('/admin/user/destroy/{id}', [AdminUserController::class, 'destroy']);
+    Route::delete('/admin/user/delete/{id}', [AdminUserController::class, 'destroy']);
 });
 //User Role
 Route::middleware(['user'])->group(function () {

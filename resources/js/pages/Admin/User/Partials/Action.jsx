@@ -28,6 +28,7 @@ import { Button } from '@/components/ui/button';
 import { Edit, Ellipsis, KeyRound, Trash } from 'lucide-react';
 import CreateUpdate from './CreateUpdate';
 import UpdatePassword from './UpdatePassword';
+import Delete from './Delete';
 export default function Action({ getData, user }) {
     const [deleteAlert, setDeleteAlert] = useState(false);
     const [editCreateModal, setEditCreateModal] = useState(false);
@@ -65,21 +66,15 @@ export default function Action({ getData, user }) {
 
             {shouldRenderDialog && (
                 <>
+                    {/* Delete */}
                     <AlertDialog open={deleteAlert} onOpenChange={setDeleteAlert}>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    This action cannot be undone. This will permanently delete and remove the data from our servers.
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogAction>Continue</AlertDialogAction>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
+                        <Delete 
+                            user={user} 
+                            getData={getData} 
+                        />
                     </AlertDialog>
-                    {/* form */}
+
+                    {/* Create or Update */}
                     <Dialog open={editCreateModal} onOpenChange={setEditCreateModal}>
                         <CreateUpdate 
                             getData={getData} 
@@ -88,6 +83,8 @@ export default function Action({ getData, user }) {
                             user={user} 
                         />
                     </Dialog>
+
+                    {/* Update Password */}
                     <Dialog open={changePassword} onOpenChange={setChangePassword}>
                         <UpdatePassword 
                             getData={getData} 

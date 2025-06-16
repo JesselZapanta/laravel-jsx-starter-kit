@@ -5,7 +5,7 @@ It provides a clean foundation for building dynamic web applications with a powe
 
 ## Description
 
-I created the **Laravel 12 - React JSX Starter Kit** as a modified version of the official Laravel Breeze + React starter, but using **JSX instead of TypeScript**, with added features like **User Management** out of the box.  
+The **Laravel 12 - React JSX Starter Kit** as a modified version of the official Laravel Breeze + React starter, but using **JSX instead of TypeScript**, with added features like **User Management** out of the box.  
 This kit aims to give developers a fast, ready-to-go foundation for building full-stack apps with minimal setup.
 
 

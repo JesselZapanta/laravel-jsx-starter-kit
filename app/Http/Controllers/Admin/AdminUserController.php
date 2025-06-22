@@ -50,6 +50,7 @@ class AdminUserController extends Controller
             'status' => 'required|in:0,1',
         ]);
 
+        $data['password'] = Hash::make($data['password']);
 
         User::create($data);
 
@@ -57,7 +58,7 @@ class AdminUserController extends Controller
             'status' => 'created'
         ], 200);
     }
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
         $user = User::findOrFail($id);
         
@@ -82,7 +83,7 @@ class AdminUserController extends Controller
         ], 200);
     }
 
-    public function password(Request $request, $id)
+    public function password(Request $request, string $id)
     {
         $user = User::findOrFail($id);
         
@@ -99,7 +100,7 @@ class AdminUserController extends Controller
         ], 200);
     }
 
-    public function destroy($id)
+    public function destroy(string $id)
     {
         $user = User::findOrFail($id);
         

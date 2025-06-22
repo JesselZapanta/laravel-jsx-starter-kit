@@ -15,17 +15,23 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
+
 //Admin Role
 Route::middleware(['admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index']);
 
-    Route::get('/admin/user/index', [AdminUserController::class, 'index']);
-    Route::get('/admin/user/getdata', [AdminUserController::class, 'getData']);
-    Route::post('/admin/user/store', [AdminUserController::class, 'store']);
-    Route::put('/admin/user/update/{id}', [AdminUserController::class, 'update']);
-    Route::put('/admin/user/password/{id}', [AdminUserController::class, 'password']);
-    Route::delete('/admin/user/delete/{id}', [AdminUserController::class, 'destroy']);
+    Route::controller(AdminUserController::class)->group(function() {
+        Route::prefix('admin/user')->group(function () {
+            Route::get('/index', 'index');
+            Route::get('/getdata', 'getData');
+            Route::post('/store', 'store');
+            Route::put('/update/{id}', 'update');
+            Route::put('/password/{id}', 'password');
+            Route::delete('/delete/{id}', 'destroy');
+        });
+    });
 });
+
 //User Role
 Route::middleware(['user'])->group(function () {
     Route::get('/user/dashboard', [UserDashboardController::class, 'index']);

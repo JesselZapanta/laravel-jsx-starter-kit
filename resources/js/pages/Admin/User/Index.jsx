@@ -75,12 +75,12 @@ export default function Index() {
     //implement debounce
     useEffect(() => {
         if(search.length > 0){
-            const handler = setTimeout(() => {
+            const timer = setTimeout(() => {
                 getData();
             }, 500);
 
             return () => {
-                clearTimeout(handler);
+                clearTimeout(timer);
             };
         }else{
             getData();
@@ -101,13 +101,13 @@ export default function Index() {
             <div className="m-4 space-y-2 rounded-xl">
                 <p className="text-lg font-bold">List of Users</p>
                 <div className="flex justify-between gap-2">
-                    <div className="flex gap-2">
+                    <div className="flex w-full gap-2">
                         <Button onClick={setEditCreateModal}>
                             <Plus />
                             New
                         </Button>
                         <Input
-                            className="w-[280px]"
+                            className="w-full min-w-[280px]"
                             type="text"
                             placeholder="Search data"
                             value={search}
@@ -234,12 +234,7 @@ export default function Index() {
                     />
                 </div>
                 <Dialog open={editCreateModal} onOpenChange={setEditCreateModal}>
-                    <CreateUpdate 
-                    getData={getData} 
-                    setEditCreateModal={setEditCreateModal} 
-                    editCreateModal={editCreateModal} 
-                    user={null} 
-                />
+                    <CreateUpdate getData={getData} setEditCreateModal={setEditCreateModal} editCreateModal={editCreateModal} user={null} />
                 </Dialog>
             </div>
         </AppLayout>

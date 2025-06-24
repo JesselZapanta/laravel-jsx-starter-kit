@@ -29,7 +29,7 @@ import { Edit, Ellipsis, KeyRound, Trash } from 'lucide-react';
 import CreateUpdate from './CreateUpdate';
 import UpdatePassword from './UpdatePassword';
 import Delete from './Delete';
-export default function Action({ getData, user }) {
+export default function Action({ getData, record }) {
     const [deleteAlert, setDeleteAlert] = useState(false);
     const [editCreateModal, setEditCreateModal] = useState(false);
     const [changePassword, setChangePassword] = useState(false);
@@ -69,7 +69,7 @@ export default function Action({ getData, user }) {
                     {/* Delete */}
                     <AlertDialog open={deleteAlert} onOpenChange={setDeleteAlert}>
                         <Delete 
-                            user={user} 
+                            record={record} 
                             getData={getData} 
                         />
                     </AlertDialog>
@@ -80,7 +80,7 @@ export default function Action({ getData, user }) {
                             getData={getData} 
                             setEditCreateModal={setEditCreateModal} 
                             editCreateModal={editCreateModal} 
-                            user={user} 
+                            record={record} 
                         />
                     </Dialog>
 
@@ -89,7 +89,7 @@ export default function Action({ getData, user }) {
                         <UpdatePassword 
                             getData={getData} 
                             setChangePassword={setChangePassword} 
-                            user={user} 
+                            record={record} 
                         />
                     </Dialog>
                 </>

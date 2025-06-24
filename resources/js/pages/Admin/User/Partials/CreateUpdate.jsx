@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 
 import { toast } from 'sonner';
 
-export default function CreateUpdate({ getData, setEditCreateModal, editCreateModal, user }) {
+export default function CreateUpdate({ getData, setEditCreateModal, editCreateModal, record }) {
     const [processing, setProcessing] = useState(false);
     const [errors, setErrors] = useState({});
 
@@ -25,17 +25,17 @@ export default function CreateUpdate({ getData, setEditCreateModal, editCreateMo
     });
 
     useEffect(() => {
-        if (user) {
+        if (record) {
             setFormData({
-                name: user.name || '',
-                email: user.email || '',
-                role: String(user.role) || '',
-                status: String(user.status) || '',
+                name: record.name || '',
+                email: record.email || '',
+                role: String(record.role) || '',
+                status: String(record.status) || '',
                 password: '',
                 password_confirmation: '',
             });
         }
-    }, [user]);
+    }, [record]);
 
     useEffect(() => {
         if (!editCreateModal) {
@@ -60,14 +60,13 @@ export default function CreateUpdate({ getData, setEditCreateModal, editCreateMo
         resetForm();
         getData();
     };
-    
 
     const handleSubmit = async () => {
         setProcessing(true);
-        if (user) {
+        if (record) {
             //update
             try {
-                const res = await axios.put(`/admin/user/update/${user.id}`, formData);
+                const res = await axios.put(`/admin/user/update/${record.id}`, formData);
 
                 if (res.data.status === 'updated') {
                     handleCloseModal();
@@ -203,7 +202,7 @@ export default function CreateUpdate({ getData, setEditCreateModal, editCreateMo
                         />
                         <InputError message={errors.email} className="mt-2" />
                     </div>
-                    {!user && (
+                    {!record && (
                         <>
                             <div className="grid gap-2">
                                 <Label htmlFor="password">PASSWORD</Label>
@@ -256,7 +255,7 @@ export default function CreateUpdate({ getData, setEditCreateModal, editCreateMo
                             Please wait
                         </>
                     ) : (
-                        <>{user ? 'Save changes' : 'Create'}</>
+                        <>{record ? 'Save changes' : 'Create'}</>
                     )}
                 </Button>
             </DialogFooter>

@@ -11,12 +11,12 @@ import axios from 'axios';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-export default function Delete({ user, getData }) {
+export default function Delete({ record, getData }) {
     const [processing, setProcessing] = useState(false);
 
     const handleDelete = async () => {
         try {
-            const res = await axios.delete(`/admin/user/delete/${user.id}`);
+            const res = await axios.delete(`/admin/user/delete/${record.id}`);
 
             if (res.data.status === 'deleted') {
                 getData();

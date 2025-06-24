@@ -178,22 +178,22 @@ export default function Index() {
                                 </TableRow>
                             ) : data && data.length > 0 ? (
                                 <>
-                                    {data.map((user) => (
-                                        <TableRow key={user.id}>
-                                            <TableCell>{user.id}</TableCell>
-                                            <TableCell>{user.name}</TableCell>
-                                            <TableCell>{user.email}</TableCell>
+                                    {data.map((record) => (
+                                        <TableRow key={record.id}>
+                                            <TableCell>{record.id}</TableCell>
+                                            <TableCell>{record.name}</TableCell>
+                                            <TableCell>{record.email}</TableCell>
                                             <TableCell>
-                                                {user.email_verified_at ? (
+                                                {record.email_verified_at ? (
                                                     <Badge variant="default">Yes</Badge>
                                                 ) : (
                                                     <Badge variant="destructive">No</Badge>
                                                 )}
                                             </TableCell>
                                             <TableCell>
-                                                {user.role === 0 ? (
+                                                {record.role === 0 ? (
                                                     <Badge variant="secondary">Admin</Badge>
-                                                ) : user.role === 1 ? (
+                                                ) : record.role === 1 ? (
                                                     <Badge variant="secondary">User</Badge>
                                                 ) : (
                                                     <Badge variant="secondary">Undefined</Badge>
@@ -201,14 +201,14 @@ export default function Index() {
                                             </TableCell>
 
                                             <TableCell>
-                                                {user.status === 1 ? (
+                                                {record.status === 1 ? (
                                                     <Badge variant="default">Active</Badge>
                                                 ) : (
                                                     <Badge variant="destructive">Inactive</Badge>
                                                 )}
                                             </TableCell>
                                             <TableCell className="text-right">
-                                                <Action getData={getData} user={user} />
+                                                <Action getData={getData} record={record} />
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -228,14 +228,15 @@ export default function Index() {
                         links={paginationLinks}
                         onPageChange={(url) => {
                             const page = new URL(url).searchParams.get('page');
-                            // console.log('Page number:', page);
                             setPage(page);
                         }}
                     />
                 </div>
-                <Dialog open={editCreateModal} onOpenChange={setEditCreateModal}>
-                    <CreateUpdate getData={getData} setEditCreateModal={setEditCreateModal} editCreateModal={editCreateModal} user={null} />
-                </Dialog>
+                {editCreateModal && (
+                    <Dialog open={editCreateModal} onOpenChange={setEditCreateModal}>
+                        <CreateUpdate getData={getData} setEditCreateModal={setEditCreateModal} editCreateModal={editCreateModal} user={null} />
+                    </Dialog>
+                )}
             </div>
         </AppLayout>
     );

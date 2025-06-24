@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import axios from 'axios';
 import { useState } from 'react';
-export default function UpdatePassword({ getData, setChangePassword, user }) {
+export default function UpdatePassword({ getData, setChangePassword, record }) {
     const [processing, setProcessing] = useState(false);
     const [errors, setErrors] = useState({});
 
@@ -23,7 +23,7 @@ export default function UpdatePassword({ getData, setChangePassword, user }) {
     const handleSubmit = async () => {
         setProcessing(true);
         try {
-            const res = await axios.put(`/admin/user/password/${user.id}`, formData);
+            const res = await axios.put(`/admin/user/password/${record.id}`, formData);
 
             if (res.data.status === 'updated') {
                 handleCloseModal();
